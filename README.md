@@ -1,5 +1,6 @@
-[API used:](https://newsapi.org/)
-[Markdown Refresher:](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+API used:
+[NewsAPI](https://newsapi.org/)
 
-Schema:
-![Schema Design:](https://dbdiagram.io/d/611dc2fe2ecb310fc3d18741)
+
+Schema Design:
+[Link to my Googlesheets](https://docs.google.com/document/d/1emVmUPUFlFJ73P5iONy2SNYtjjJL6E8IUPVrZOOk8zc/edit?usp=sharing)
