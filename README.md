@@ -1,5 +1,5 @@
 API used:
-[NewsAPI](https://newsapi.org/)
+[Hoaxy API](https://rapidapi.com/truthy/api/hoaxy/)
 
 
 Schema Design:
