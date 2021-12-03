@@ -59,9 +59,6 @@ def do_logout():
 def signup():
     """Handles user signup; stores it in db"""
 
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
-
     form = UserAddForm()
     
     if form.validate_on_submit():
@@ -127,8 +124,6 @@ def homepage():
 #     return render_template("404.html"), 404
 
 ##############################################################################
-
-
 
 # @app.route("/list-articles")
 # def search():
