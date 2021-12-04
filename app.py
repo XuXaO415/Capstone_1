@@ -58,6 +58,9 @@ def do_logout():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     """Handles user signup; stores it in db"""
+    
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
 
     form = UserAddForm()
     
@@ -86,23 +89,22 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Handle user login"""
+    
     form = LoginForm()
-
+    
     if form.validate_on_submit():
-        username = form.username.data,
-        password = form.password.data
-
-        user = User.authenticate(username=username, password=password)
-
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+        
         if user:
             do_login(user)
-            flash(f"Welcome back {user.username}", "success")
+            flash(f"Welcome back, {user.username}!", "success")
             return redirect("/")
-
-        flash("Invalid credentials", "danger")
-
+        
+        flash("Invalid credentials.", "danger")
+        
     return render_template("users/login.html", form=form)
-
+    
 
 @app.route("/logout")
 def logout():
@@ -110,13 +112,14 @@ def logout():
 
     do_logout()
     flash("You have successfully logged out of Aletheia!", "success")
-    return redirect("/")
+    return redirect("/login")
         
 ##############################################################################
 # Homepage and error pages
         
 @app.route("/")
 def homepage():
+    """Show homepage"""
     return render_template("base.html")
 
 # @app.errorhandler(404)
@@ -125,8 +128,12 @@ def homepage():
 
 ##############################################################################
 
-# @app.route("/list-articles")
-# def search():
+@app.route("/list-articles")
+def list_articles():
+    """List all articles"""
+    url = "https://api-hoaxy.p.rapidapi.com/top-articles"
+    
+    
     
         
 ##############################################################################
