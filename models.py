@@ -29,22 +29,30 @@ class User(db.Model):
     def __repr__(self):
         return f"<User #{self.id}: {self.username}. {self.password}>"
     
-    @classmethod
+    # @classmethod
+    # def signup(cls, first_name, last_name, email, username, password):
+    #     """Signs up new user. Hashes password & adds user to db"""
+        
+    #     hashed_pwd = bcrypt.generate_password_hash(password).decode("UTF-8")
+        
+    #     user = User(
+    #         first_name=first_name,
+    #         last_name=last_name,
+    #         email=email,
+    #         username=username,
+    #         password=hashed_pwd
+    #     )
+        
+    #     db.session.add(user)
+    #     return user
+    
+    @classmethod 
     def signup(cls, first_name, last_name, email, username, password):
-        """Signs up new user. Hashes password & adds user to db"""
+        hashed = bcrypt.generate_password_hash(password)
         
-        hashed_pwd = bcrypt.generate_password_hash(password).decode("UTF-8")
+        hashed_utf8 = hashed.decode("utf8")
         
-        user = User(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            username=username,
-            password=hashed_pwd
-        )
-        
-        db.session.add(user)
-        return user
+        return cls(first_name=first_name, last_name=last_name, email=email, username=username, password=password)
     
     @classmethod
     def authenticate(cls, username, password):
@@ -66,24 +74,7 @@ class User(db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
-    # class Headlines(db.Model):
-    #     """Top trending headlines by category"""
-        
-    #     __tablename__ = "headlines"
-    #     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    #     business = db.Column(db.Text, nullable=True)
-    #     entertainment = db.Column(db.Text, nullable=True)
-    #     general = db.Column(db.Text, nullable=True)
-    #     health = db.Column(db.Text, nullable=True)
-    #     sports = db.Column(db.Text, nullable=True)
-    #     technology = db.Column(db.Text, nullable=True)
-        
-    # class Country(db.Model):
-    #     """Search news by Country"""
-        
-    #     __tablename__ = "countries"
-        
-    
+
     
     
     
