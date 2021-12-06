@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 #################################################################################
 from forms import UserAddForm, LoginForm
-from models import db, connect_db, User
+from models import db, connect_db, User, LatestArticles, TopArticle, FavoriteArticle
 #################################################################################
 # from secrets import API_KEY
 from dotenv import load_dotenv
@@ -22,11 +22,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-# app.config['SECRET_KEY'] = os.environ.get('API_KEY', os.getenv('API_KEY'))
+app.config['SECRET_KEY'] = os.environ.get('API_KEY', os.getenv('API_KEY'))
 # app.config['SECRET_KEY'] = 'API_KEY'
-# toolbar = DebugToolbarExtension(app)
-app.config['SECRET_KEY'] = os.getenv("API_KEY")
 app.config['host'] = os.getenv("host")
+toolbar = DebugToolbarExtension(app)
 
 
 connect_db(app)
@@ -93,12 +92,13 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Handle user login"""
-
+    
     form = LoginForm()
 
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
-                                 form.password.data)
+                                 form.password.data
+                                )
 
         if user:
             do_login(user)
@@ -131,12 +131,17 @@ def homepage():
 # def page_not_found(e):
 #     return render_template("404.html"), 404
 
+# @app.errorhandler(500)
+# def internal_server_error(e):
+#     return render_template("500.html"), 500
+
 ##############################################################################
+
 
 @app.route("/top-articles/<int:id>")
 def top_articles(id):
     """List all top articles"""
-    
+
     url = "https://api-hoaxy.p.rapidapi.com/top-articles"
 
     querystring = {"most_recent": "true"}
@@ -152,12 +157,10 @@ def top_articles(id):
     print(response.text)
 
 
-    
-
 @app.route("/lates-articles")
 def latest_articles():
     """List all articles from past 2 hours"""
-    
+
     url = "https://api-hoaxy.p.rapidapi.com/latest-articles"
 
     querystring = {"past_hours": "2"}
@@ -173,15 +176,20 @@ def latest_articles():
     print(response.text)
 ##############################################################################
 # User's favorite articles
-@app.route("/users/favorite", methods=["POST"])
-def favorite_article():
 
 
+# @app.route("/users/favorite", methods=["POST"])
+# def favorite_article():
+#     """Enables a user to favorite an article"""
     
+#     user_id = g.user.id 
+#     user = User.query.get_or_404(user_id)
+    
+#     if user:
+        
 
 ##############################################################################
 # Turn off all caching in Flask
-
 
 @app.after_request
 def add_header(req):

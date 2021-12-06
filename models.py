@@ -28,7 +28,9 @@ class User(db.Model):
     user_id = db.relationship('FavoriteArticle', backref='users', lazy=True)
 
     def __repr__(self):
-        return f"<User {self.id}: {self.username}. {self.password}>"
+        user = self
+        return f"<User {user.id} {user.fist_name} {user.last_name} {user.email} {user.username}>"
+        # return f"<User {self.id}: {self.username}. {self.password}>"
 
 
     @classmethod
