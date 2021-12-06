@@ -25,9 +25,10 @@ class User(db.Model):
     email = db.Column(db.Text, nullable=False, unique=True)
     username = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
+    user_id = db.relationship('FavoriteArticle', backref='users', lazy=True)
 
     def __repr__(self):
-        return f"<User #{self.id}: {self.username}. {self.password}>"
+        return f"<User {self.id}: {self.username}. {self.password}>"
 
 
     @classmethod
@@ -65,7 +66,7 @@ class LatestArticles(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     conical_url = db.Column(db.Text, nullable=False, unique=False)
-    date_published = db.Column(db.Datetime, nullable=False, unique=False )
+    date_published = db.Column(db.Integer, nullable=False, unique=False )
     domain = db.Column(db.Text, nullable=False, unique=False)
     article_id = db.Column(db.Integer, nullable=False)
     site_type = db.Column(db.Text, nullable=False)
@@ -79,10 +80,10 @@ class TopArticle(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     canonical_url = db.Column(db.Text, nullable=False, unique=False)
-    date_captured = db.Column(db.Datetime, nullable=False, unique=False)
+    date_captured = db.Column(db.Integer, nullable=False, unique=False)
     site_type = db.Column(db.Text, nullable=False, unique=False )
     article_title = db.Column(db.Text, nullable=False, unique=False )
-    upper_day = db.Column(db.Datetime, nullable=False, unique=False)
+    upper_day = db.Column(db.Integer, nullable=False, unique=False)
     
 
 class FavoriteArticle(db.Model):
@@ -91,3 +92,5 @@ class FavoriteArticle(db.Model):
     __tablename__ = "favorite_articles"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+  
