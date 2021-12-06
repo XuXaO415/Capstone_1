@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, g, flash, session, g, url_fo
 import requests
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 #################################################################################
 from forms import UserAddForm, LoginForm
 from models import db, connect_db, User
@@ -24,7 +25,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 # app.config['SECRET_KEY'] = os.environ.get('API_KEY', os.getenv('API_KEY'))
 # app.config['SECRET_KEY'] = 'API_KEY'
 # toolbar = DebugToolbarExtension(app)
-app.config['API_KEY'] = os.getenv("API_KEY")
+app.config['SECRET_KEY'] = os.getenv("API_KEY")
 app.config['host'] = os.getenv("host")
 
 
@@ -132,24 +133,51 @@ def homepage():
 
 ##############################################################################
 
-
-@app.route("/list-articles")
-def list_articles():
-    """List all articles"""
-
-
+@app.route("/top-articles/<int:id>")
+def top_articles(id):
+    """List all top articles"""
+    
     url = "https://api-hoaxy.p.rapidapi.com/top-articles"
 
     querystring = {"most_recent": "true"}
 
     headers = {
-    'x-rapidapi-host': host,
-    'x-rapidapi-key': API_KEY
+        'x-rapidapi-host': host,
+        'x-rapidapi-key': API_KEY
     }
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    response = requests.request(
+        "GET", url, headers=headers, params=querystring)
 
     print(response.text)
+
+
+    
+
+@app.route("/lates-articles")
+def latest_articles():
+    """List all articles from past 2 hours"""
+    
+    url = "https://api-hoaxy.p.rapidapi.com/latest-articles"
+
+    querystring = {"past_hours": "2"}
+
+    headers = {
+        'x-rapidapi-host': host,
+        'x-rapidapi-key': API_KEY
+    }
+
+    response = requests.request(
+        "GET", url, headers=headers, params=querystring)
+
+    print(response.text)
+##############################################################################
+# User's favorite articles
+@app.route("/users/favorite", methods=["POST"])
+def favorite_article():
+
+
+    
 
 ##############################################################################
 # Turn off all caching in Flask
