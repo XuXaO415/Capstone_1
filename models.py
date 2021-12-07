@@ -94,6 +94,7 @@ class FavoriteArticle(db.Model):
     __tablename__ = "favorite_articles"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # Replace with backref
     lastest_id = db.Column(db.Integer, db.ForeignKey('latest_articles.id', ondelete='cascade'), unique=True)
     top_id = db.Column(db.Integer, db.ForeignKey('top_articles.id', ondelete='cascade'), unique=True)
     # title = db.Column(db.Text, db.ForeignKey('lastest_articles.id', ondelete='cascade'), nullable=False)

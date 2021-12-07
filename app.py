@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, g, flash, session, g, url_for
+from flask import Flask, render_template, redirect, g, flash, session, g, url_for, request
 import requests
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
@@ -31,6 +31,7 @@ toolbar = DebugToolbarExtension(app)
 
 
 connect_db(app)
+# db.create_all()
 
 
 ##############################################################################
@@ -78,6 +79,7 @@ def signup():
                 username=form.username.data,
                 password=form.password.data
             )
+            db.session.add(user)
             db.session.commit()
 
         except IntegrityError:
@@ -104,7 +106,7 @@ def login():
 
         if user:
             do_login(user)
-            flash(f"Welcome back, {user.username}!", "success")
+            flash(f"Welcome back {user.username}!", "success")
             return redirect("/")
 
         flash("Invalid credentials.", "danger")
@@ -126,34 +128,43 @@ def logout():
 ##############################################################################
 # Homepage and error pages
 
-
 @app.route("/")
-def homepage():
-    """Show homepage"""
-    return render_template("base.html")
+def index():
+    
+    return render_template("index.html")
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template("404.html"), 404
+    
+# @app.route("/")
+# def homepage():
+#     """Show homepage"""
+#     return render_template("base.html")
+
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return render_template("404.html"), 404
 
 # @app.errorhandler(500)
 # def internal_server_error(e):
 #     return render_template("500.html"), 500
 
 ##############################################################################
-
+@app.route("/top")
+def top_articles():
+    render_template("top-articles.html")
 
 @app.route("/top-articles")
-def top_articles():  # sourcery skip: remove-redundant-fstring
+def get_top_articles(): 
     """List all top articles"""
-
-    url = "https://api-hoaxy.p.rapidapi.com/top-articles"
-
-    querystring = {"most_recent": "true"}
     host = os.getenv('host')
     API_KEY = os.getenv('API_KEY')
+    URL = os.getenv('URL')
+    querystring = os.getenv('querystring')
+    
+    
     # pdb.set_trace()
-    print(f"host")
+    # print(f"host")
+    
+    querystring = {"most_recent": "true"}
     
 
     headers = {
@@ -162,28 +173,34 @@ def top_articles():  # sourcery skip: remove-redundant-fstring
     }
 
     response = requests.request(
-        "GET", url, headers=headers, params=querystring)
-
+        "GET", URL, headers=headers, params=querystring)
+    pdb.set_trace()
+    
+    data = response.json()
+    
+    return render_template("top-articles.html")
+    
     print(response.text)
+ 
 
 
-@app.route("/lates-articles")
-def latest_articles():
-    """List all articles from past 2 hours"""
+# @app.route("/latest-articles")
+# def latest_articles():
+#     """List all articles from past 2 hours"""
 
-    url = "https://api-hoaxy.p.rapidapi.com/latest-articles"
+#     url = "https://api-hoaxy.p.rapidapi.com/latest-articles"
 
-    querystring = {"past_hours": "2"}
+#     querystring = {"past_hours": "2"}
 
-    headers = {
-        'x-rapidapi-host': host,
-        'x-rapidapi-key': API_KEY
-    }
+#     headers = {
+#         'x-rapidapi-host': host,
+#         'x-rapidapi-key': API_KEY
+#     }
 
-    response = requests.request(
-        "GET", url, headers=headers, params=querystring)
+#     response = requests.request(
+#         "GET", url, headers=headers, params=querystring)
 
-    print(response.text)
+#     print(response.text)
     
 
 ##############################################################################
