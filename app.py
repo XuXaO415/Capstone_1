@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 #################################################################################
 # https: // jonathansoma.com/lede/foundations-2019/classes/apis/keeping-api-keys-secret/
+import pdb
 
 CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
@@ -22,9 +23,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-app.config['SECRET_KEY'] = os.environ.get('API_KEY', os.getenv('API_KEY'))
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+API_KEY = os.getenv('API_KEY')
 # app.config['SECRET_KEY'] = 'API_KEY'
-app.config['host'] = os.getenv("host")
+host = os.getenv("host")
 toolbar = DebugToolbarExtension(app)
 
 
@@ -118,6 +120,9 @@ def logout():
     flash("You have successfully logged out of Aletheia!", "success")
     return redirect("/login")
 
+# # TODO: Make user profile page
+# @app.route("/users/profile", methods=["GET", "POST"])
+# def profile():
 ##############################################################################
 # Homepage and error pages
 
@@ -127,9 +132,9 @@ def homepage():
     """Show homepage"""
     return render_template("base.html")
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     return render_template("404.html"), 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
 # @app.errorhandler(500)
 # def internal_server_error(e):
@@ -138,13 +143,18 @@ def homepage():
 ##############################################################################
 
 
-@app.route("/top-articles/<int:id>")
-def top_articles(id):
+@app.route("/top-articles")
+def top_articles():  # sourcery skip: remove-redundant-fstring
     """List all top articles"""
 
     url = "https://api-hoaxy.p.rapidapi.com/top-articles"
 
     querystring = {"most_recent": "true"}
+    host = os.getenv('host')
+    API_KEY = os.getenv('API_KEY')
+    # pdb.set_trace()
+    print(f"host")
+    
 
     headers = {
         'x-rapidapi-host': host,
@@ -174,11 +184,13 @@ def latest_articles():
         "GET", url, headers=headers, params=querystring)
 
     print(response.text)
+    
+
 ##############################################################################
 # User's favorite articles
 
 
-# @app.route("/users/favorite", methods=["POST"])
+# @app.route("/users/favorite", methods=["GET", POST"])
 # def favorite_article():
 #     """Enables a user to favorite an article"""
     

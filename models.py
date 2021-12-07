@@ -29,7 +29,7 @@ class User(db.Model):
 
     def __repr__(self):
         user = self
-        return f"<User {user.id} {user.fist_name} {user.last_name} {user.email} {user.username}>"
+        return f"<User #{user.id} {user.fist_name} {user.last_name} {user.email} {user.username}>"
         # return f"<User {self.id}: {self.username}. {self.password}>"
 
 
@@ -94,5 +94,10 @@ class FavoriteArticle(db.Model):
     __tablename__ = "favorite_articles"
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    lastest_id = db.Column(db.Integer, db.ForeignKey('latest_articles.id', ondelete='cascade'), unique=True)
+    top_id = db.Column(db.Integer, db.ForeignKey('top_articles.id', ondelete='cascade'), unique=True)
+    # title = db.Column(db.Text, db.ForeignKey('lastest_articles.id', ondelete='cascade'), nullable=False)
+    # site_type = db.Column(db.Text, db.ForeignKey('top_articles.id', ondelete='cascade'), nullable=False)
+    # article_title = db.Column(db.Text, db.ForeignKey('top_articles.id', ondelete='cascade'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
   
