@@ -4,6 +4,7 @@ import requests
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
+from werkzeug.security import check_password_hash, generate_password_hash
 #################################################################################
 from forms import UserAddForm, LoginForm
 from models import db, connect_db, User, LatestArticles, TopArticle, FavoriteArticle
@@ -77,7 +78,7 @@ def signup():
                 last_name=form.last_name.data,
                 email=form.email.data,
                 username=form.username.data,
-                password=form.password.data
+                pwd=form.password.data
             )
             db.session.add(user)
             db.session.commit()
@@ -98,20 +99,41 @@ def login():
     """Handle user login"""
     
     form = LoginForm()
-
+    
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
-                                 form.password.data
-                                )
-
+        name = form.username.data 
+        pwd = form.password.data
+        
+        user = User.authenticate(name, pwd)
+        
         if user:
             do_login(user)
             flash(f"Welcome back {user.username}!", "success")
             return redirect("/")
-
-        flash("Invalid credentials.", "danger")
-
+        
+        flash("invalid credentials!", "danger")
+        
     return render_template("users/login.html", form=form)
+            
+    
+    # Salt not working
+    # form = LoginForm()
+
+    # if form.validate_on_submit():
+    #     user = User.authenticate(form.username.data,
+    #                              form.password.data
+    #                             )
+
+    #     if user:
+    #         do_login(user)
+    #         flash(f"Welcome back {user.username}!", "success")
+    #         return redirect("/")
+
+    #     flash("Invalid credentials!", "danger")
+
+    # return render_template("users/login.html", form=form)
+    
+
 
 
 @app.route("/logout")
@@ -139,13 +161,13 @@ def index():
 #     """Show homepage"""
 #     return render_template("base.html")
 
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     return render_template("404.html"), 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html"), 404
 
-# @app.errorhandler(500)
-# def internal_server_error(e):
-#     return render_template("500.html"), 500
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template("500.html"), 500
 
 ##############################################################################
 @app.route("/top")
@@ -174,7 +196,7 @@ def get_top_articles():
 
     response = requests.request(
         "GET", URL, headers=headers, params=querystring)
-    pdb.set_trace()
+    # pdb.set_trace()
     
     data = response.json()
     
