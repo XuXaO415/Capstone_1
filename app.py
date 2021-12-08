@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 #################################################################################
-from forms import UserAddForm, LoginForm
+from forms import UserAddForm, LoginForm, UserEditForm
 from models import db, connect_db, User, LatestArticles, TopArticle, FavoriteArticle
 #################################################################################
 # from secrets import API_KEY
@@ -111,7 +111,7 @@ def login():
             flash(f"Welcome back {user.username}!", "success")
             return redirect("/")
         
-        flash("invalid credentials!", "danger")
+        flash("Invalid credentials!", "danger")
         
     return render_template("users/login.html", form=form)
             
@@ -133,6 +133,63 @@ def login():
 
     # return render_template("users/login.html", form=form)
     
+    # TODO: Make user profile page
+# @app.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
+# def edit_user(user_id):
+#     """Shows user edit form and handle edit"""
+    
+#     user = User.query.get_or_404(user_id)
+    
+#     form = UserEditForm(user=user)
+    
+#     if form.validate_on_submit():
+#         user.email = form.email.data
+#         user.username = form.username.data
+#         user.password = form.password.data
+        
+#         # db.session.add(user)
+#         db.session.commit()
+        
+#         flash(f"User {user_id} successfully updated")
+#         return redirect(f"/users/{user_id}/edit")
+    
+#     else:
+#         return render_template("/users/edit.html", form=form)
+        
+
+@app.route('/users/edit', methods=["GET", "POST"])
+def edit_user():
+    """Edit user profile"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect('/')
+
+    user = g.user
+    form = UserEditForm(obj=user)
+
+    if form.validate_on_submit():
+        if User.authenticate(user.username, form.password.data):
+            user.username = form.username.data
+            user.email = form.email.data
+
+            db.session.commit()
+            # return redirect(f"/users/{user.id}")
+            
+
+    return render_template("users/edit.html", form=form, user_id=user.id)
+
+# @app.route("/users/<int:user_id>")
+# def user_profile(user_id):
+#     user = User.query.get(user_id)
+#     if g.user.id != user.id:
+#         return redirect(f"/users/{g.user.id}")
+    
+#     if not g.user:
+#         flash("Unauthorized Access, you must be logged in to view this content", "danger")
+#         return redirect("/login")
+    
+#     return render_template("users/profile.html", user=user)
 
 
 
@@ -144,9 +201,7 @@ def logout():
     flash("You have successfully logged out of Aletheia!", "success")
     return redirect("/login")
 
-# # TODO: Make user profile page
-# @app.route("/users/profile", methods=["GET", "POST"])
-# def profile():
+
 ##############################################################################
 # Homepage and error pages
 
