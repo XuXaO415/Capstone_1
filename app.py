@@ -78,7 +78,7 @@ def signup():
                 last_name=form.last_name.data,
                 email=form.email.data,
                 username=form.username.data,
-                pwd=form.password.data
+                password=form.password.data
             )
             db.session.add(user)
             db.session.commit()
@@ -101,10 +101,12 @@ def login():
     form = LoginForm()
     
     if form.validate_on_submit():
-        name = form.username.data 
-        pwd = form.password.data
+        # user = User.authenticate(form.username.data, form.password.data)
+        username = form.username.data
+        password = form.password.data
         
-        user = User.authenticate(name, pwd)
+        user = User.authenticate(username, password)
+        # pdb.set_trace()
         
         if user:
             do_login(user)
@@ -166,18 +168,27 @@ def edit_user():
         return redirect('/')
 
     user = g.user
-    form = UserEditForm(obj=user)
+    form = UserEditForm(obj=g.user)
 
     if form.validate_on_submit():
-        if User.authenticate(user.username, form.password.data):
+        user =  User.authenticate(form.username.data, form.password.data)
+        
+        if user:
             user.username = form.username.data
             user.email = form.email.data
-
-            db.session.commit()
-            # return redirect(f"/users/{user.id}")
+            user.password = form.password.data
             
-
-    return render_template("users/edit.html", form=form, user_id=user.id)
+            db.session.add(user)
+            db.session.commit()
+            
+            flash("Your profile has been updated", "success")
+            return redirect(f"/user/{g.user.id}")
+        else:
+            flash("Incorrect credentials", "danger")
+            return redirect(f"/users/{g.user.id}")
+    else:
+            return render_template("users/edit.html", form=form)
+            
 
 # @app.route("/users/<int:user_id>")
 # def user_profile(user_id):
@@ -211,7 +222,7 @@ def index():
     return render_template("index.html")
 
     
-# @app.route("/")
+# @app.route("/homepage")
 # def homepage():
 #     """Show homepage"""
 #     return render_template("base.html")
@@ -225,9 +236,9 @@ def internal_server_error(e):
     return render_template("500.html"), 500
 
 ##############################################################################
-@app.route("/top")
-def top_articles():
-    render_template("top-articles.html")
+# @app.route("/top")
+# def top_articles():
+#     render_template("top-articles.html")
 
 @app.route("/top-articles")
 def get_top_articles(): 
@@ -235,30 +246,34 @@ def get_top_articles():
     host = os.getenv('host')
     API_KEY = os.getenv('API_KEY')
     URL = os.getenv('URL')
-    querystring = os.getenv('querystring')
+    # querystring = os.getenv('querystring')
     
     
     # pdb.set_trace()
     # print(f"host")
     
-    querystring = {"most_recent": "true"}
+    # querystring = {"most_recent": "true"}
     
 
-    headers = {
-        'x-rapidapi-host': host,
-        'x-rapidapi-key': API_KEY
-    }
+    # headers = {
+    #     'x-rapidapi-host': host,
+    #     'x-rapidapi-key': API_KEY
+    # }
 
-    response = requests.request(
-        "GET", URL, headers=headers, params=querystring)
-    # pdb.set_trace()
+    # response = requests.request(
+    #     "GET", URL, headers=headers, params=querystring)
+    # # pdb.set_trace()
     
-    data = response.json()
+    # data = response.json()
     
-    return render_template("top-articles.html")
+    # return render_template("top-articles.html")
+    # print(response.text)
     
-    print(response.text)
- 
+    response = requests.get(URL, host=host)
+    print 
+    response.json()
+    
+    
 
 
 # @app.route("/latest-articles")

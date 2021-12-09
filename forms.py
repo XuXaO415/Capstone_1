@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.fields.simple import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, InputRequired, Length
+from wtforms.widgets.core import SubmitInput
 from models import User
 
 class UserAddForm(FlaskForm):
@@ -20,4 +21,10 @@ class LoginForm(FlaskForm):
     # submit = SubmitField('Log in')
     
     
+class UserEditForm(FlaskForm):
+    """User edit form"""
     
+    email = StringField("Email", validators=[InputRequired()])
+    username = StringField("Username", validators=[InputRequired()])
+    password = PasswordField("Password", validators=[InputRequired(), Length(6, 20)])
+    # submit = SubmitField("Submit")
