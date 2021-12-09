@@ -109,46 +109,13 @@ def login():
         if user:
             do_login(user)
             flash(f"Welcome back {user.username}!", "success")
-            return redirect("/")
+            return redirect("/top-articles")
 
         flash("Invalid credentials.", 'danger')
 
     return render_template('users/login.html', form=form)
     
-    # form = LoginForm()
     
-    # if form.validate_on_submit():
-    #     name = form.username.data 
-    #     pwd = form.password.data
-        
-    #     user = User.authenticate(name, pwd)
-        
-    #     if user:
-    #         do_login(user)
-    #         flash(f"Welcome back {user.username}!", "success")
-    #         return redirect("/")
-        
-    #     flash("Invalid credentials!", "danger")
-        
-    # return render_template("users/login.html", form=form)
-            
-    
-    # Salt not working
-    # form = LoginForm()
-
-    # if form.validate_on_submit():
-    #     user = User.authenticate(form.username.data,
-    #                              form.password.data
-    #                             )
-
-    #     if user:
-    #         do_login(user)
-    #         flash(f"Welcome back {user.username}!", "success")
-    #         return redirect("/")
-
-    #     flash("Invalid credentials!", "danger")
-
-    # return render_template("users/login.html", form=form)
     
     # TODO: Make user profile page
 # @app.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
@@ -174,40 +141,44 @@ def login():
 #         return render_template("/users/edit.html", form=form)
         
 
-@app.route('/users/edit', methods=["GET", "POST"])
-def edit_user():
-    """Edit user profile"""
+# @app.route('/users/edit/<int:user_id>', methods=["GET", "POST"])
+# def edit_user(user_id):
+#     """Edit user profile"""
 
-    if not g.user:
-        flash("Access unauthorized.", "danger")
-        return redirect('/')
+#     if not g.user:
+#         flash("Access unauthorized.", "danger")
+#         return redirect('/')
 
-    user = g.user
-    form = UserEditForm(obj=user)
+#     user = g.user
+#     form = UserEditForm(obj=user)
 
-    if form.validate_on_submit():
-        if User.authenticate(user.username, form.password.data):
-            user.username = form.username.data
-            user.email = form.email.data
+#     if form.validate_on_submit():
+#         if User.authenticate(user.username, form.password.data):
+#             user.username = form.username.data
+#             user.email = form.email.data
 
-            db.session.commit()
-            # return redirect(f"/users/{user.id}")
+#             db.session.commit()
+#             # return redirect(f"/users/{user.id}")
             
 
-    return render_template("users/edit.html", form=form, user_id=user.id)
+#     return render_template("users/edit.html", form=form, user_id=user.id)
 
-# @app.route("/users/<int:user_id>")
-# def user_profile(user_id):
-#     user = User.query.get(user_id)
-#     if g.user.id != user.id:
-#         return redirect(f"/users/{g.user.id}")
-    
-#     if not g.user:
-#         flash("Unauthorized Access, you must be logged in to view this content", "danger")
-#         return redirect("/login")
-    
-#     return render_template("users/profile.html", user=user)
+@app.route('/users/edit/<int:user_id>', methods=["GET", "POST"])
+def edit_user(user_id):
+    """Edit user profile"""
 
+    user = User.query.get(user_id)
+    form = UserEditForm(obj=user)
+    
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.password = form.password.data
+        user.email = form.email.data
+
+        db.session.commit()
+        return redirect(f"/users/{user.id}")
+
+    return render_template("users/edit.html", form=form)
 
 
 @app.route("/logout")
