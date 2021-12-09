@@ -99,23 +99,38 @@ def login():
     """Handle user login"""
     
     form = LoginForm()
-    
+    username = form.username.data,
+    password = form.password.data 
+
     if form.validate_on_submit():
-        # user = User.authenticate(form.username.data, form.password.data)
-        username = form.username.data
-        password = form.password.data
-        
-        user = User.authenticate(username, password)
-        # pdb.set_trace()
-        
+        user = User.authenticate(form.username.data,
+                                 form.password.data)
+
         if user:
             do_login(user)
             flash(f"Welcome back {user.username}!", "success")
             return redirect("/")
+
+        flash("Invalid credentials.", 'danger')
+
+    return render_template('users/login.html', form=form)
+    
+    # form = LoginForm()
+    
+    # if form.validate_on_submit():
+    #     name = form.username.data 
+    #     pwd = form.password.data
         
-        flash("Invalid credentials!", "danger")
+    #     user = User.authenticate(name, pwd)
         
-    return render_template("users/login.html", form=form)
+    #     if user:
+    #         do_login(user)
+    #         flash(f"Welcome back {user.username}!", "success")
+    #         return redirect("/")
+        
+    #     flash("Invalid credentials!", "danger")
+        
+    # return render_template("users/login.html", form=form)
             
     
     # Salt not working
@@ -168,27 +183,18 @@ def edit_user():
         return redirect('/')
 
     user = g.user
-    form = UserEditForm(obj=g.user)
+    form = UserEditForm(obj=user)
 
     if form.validate_on_submit():
-        user =  User.authenticate(form.username.data, form.password.data)
-        
-        if user:
+        if User.authenticate(user.username, form.password.data):
             user.username = form.username.data
             user.email = form.email.data
-            user.password = form.password.data
-            
-            db.session.add(user)
+
             db.session.commit()
+            # return redirect(f"/users/{user.id}")
             
-            flash("Your profile has been updated", "success")
-            return redirect(f"/user/{g.user.id}")
-        else:
-            flash("Incorrect credentials", "danger")
-            return redirect(f"/users/{g.user.id}")
-    else:
-            return render_template("users/edit.html", form=form)
-            
+
+    return render_template("users/edit.html", form=form, user_id=user.id)
 
 # @app.route("/users/<int:user_id>")
 # def user_profile(user_id):
