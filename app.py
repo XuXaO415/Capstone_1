@@ -141,28 +141,6 @@ def login():
 #         return render_template("/users/edit.html", form=form)
         
 
-# @app.route('/users/edit/<int:user_id>', methods=["GET", "POST"])
-# def edit_user(user_id):
-#     """Edit user profile"""
-
-#     if not g.user:
-#         flash("Access unauthorized.", "danger")
-#         return redirect('/')
-
-#     user = g.user
-#     form = UserEditForm(obj=user)
-
-#     if form.validate_on_submit():
-#         if User.authenticate(user.username, form.password.data):
-#             user.username = form.username.data
-#             user.email = form.email.data
-
-#             db.session.commit()
-#             # return redirect(f"/users/{user.id}")
-            
-
-#     return render_template("users/edit.html", form=form, user_id=user.id)
-
 @app.route('/users/edit/<int:user_id>', methods=["GET", "POST"])
 def edit_user(user_id):
     """Edit user profile"""
@@ -246,9 +224,9 @@ def get_top_articles():
     # return render_template("top-articles.html")
     # print(response.text)
     
-    response = requests.get(URL, host=host)
-    print 
-    response.json()
+    # response = requests.get(URL)
+    # print 
+    # response.json()
     
     
 
@@ -298,3 +276,6 @@ def add_header(req):
     req.headers["Expires"] = "0"
     req.headers['Cache-Control'] = 'public, max-age=0'
     return req
+
+
+
