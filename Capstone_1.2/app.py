@@ -126,97 +126,132 @@ def page_not_found(e):
     return render_template("404.html"), 404
 
 ##############################################################################
-# @app.route("/top-articles")
-# def show_top_articles():
+@app.route("/search")
+def show_top_articles():
+   
+    HOST = os.getenv('HOST')
+    API_KEY = os.getenv('API_KEY')
+    TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
+    # articles = request.args["articles"]
+    # print(API_KEY)
     
-#     HOST = os.getenv('HOST')
-#     API_KEY = os.getenv('API_KEY')
-#     TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
-#     # articles = request.args["articles"]
-    
-#     response = requests.get("https://api-hoaxy.p.rapidapi.com/top-articles",
-#                             params ={"most_recent": "true", "x-rapid-host": 'HOST, "x-rapid-key": 'API_KEY'})
-#     top_articles = response.json()
-#     print(response.text)
-#     return jsonify(top_articles)
-#     return render_template("top_articles.html")
 
-@app.route("/search", methods=["GET", "POST"])
-def search_articles():
+    querystring = {
+    "query": request.args['q'], "sort_by": "relevant", "use_lucene_syntax": "true"}
+    
+    latestquery = {
+        "query": request.args['q'], "sort_by": "recent", "use_lucene_syntax": "true"}
+
+    
+    headers = {
+        'x-rapidapi-host': "api-hoaxy.p.rapidapi.com",
+        'x-rapidapi-key': "d8313e232amsh5a802c2be2cf4d8p166013jsn2c6c9bae4858"
+    }
+
+    response = requests.get("https://api-hoaxy.p.rapidapi.com/articles", headers=headers,
+                            params=querystring)
+    
+    latestresponse = requests.get("https://api-hoaxy.p.rapidapi.com/articles", headers=headers,
+                            params=latestquery)
+    top_articles = response.json()
+    latest_articles= latestresponse.json()
+    print(response.text)
+    # return jsonify(top_articles)
+    # pdb.set_trace()
+    return render_template("top_articles.html", top_articles=top_articles['articles'], latest_articles=latest_articles['articles'])
+
+
+
+@app.route("/search/newsapi", methods=["GET", "POST"])
+def search_top_articles():
 
     API_SECRET_KEY = os.getenv('API_SECRET_KEY')
-    response = requests.get(f"https://newsapi.org/v2/top-headlines?country=us&category=health&apiKey={API_SECRET_KEY}"
+    response = requests.get(f"https://newsapi.org/v2/top-headlines?q={request.args['q']}&apiKey={API_SECRET_KEY}"
         )
     
     top_headlines = response.json()
     return jsonify(top_headlines)
 
 
-@app.route("/top-headlines")
-def show_top_articles():
 
-    # HOST = os.getenv('HOST')
-    API_SECRET_KEY = os.getenv('API_SECRET_KEY')
-    TA_URL = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_SECRET_KEY}"
-    # headlines = request.args["headlines"]
+        
+    
+
+# DO NOT USE
+# @app.route("/search")
+# def search_articles():
+#     search = request.args.get("q")
+#     top_articles = TopArticle.query.all()
+#     return render_template('index.html', top_articles=top_articles)
 
 
-    response = requests.get(TA_URL)
-    top_articles = response.json()
-    # print(response.text)
-    return jsonify(top_articles)
-    return render_template("top_articles.html", headlines=top_articles)
+# @app.route("/top-headlines")
+# def show_top_headlines():
+
+#     # HOST = os.getenv('HOST')
+#     API_SECRET_KEY = os.getenv('API_SECRET_KEY')
+#     TA_URL = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_SECRET_KEY}"
+#     # headlines = request.args.get["headlines"]
+
+
+#     response = requests.get(TA_URL)
+#     top_headlines = response.json()
+#     # print(response.text)
+#     return jsonify(top_headlines)
+#     return render_template("top_headlines.html", headlines=top_headlines)
 
     
-@app.route("/top-articles/<string:most_recent>")
-def list_top_articles(most_recent):
-    """List top articles from last 30 days"""
+# @app.route("/top-articles")
+# def list_top_articles():
+#     """List top articles from last 30 days"""
     
-    # top_articles = TopArticle.query.all()
+#     top_articles = TopArticle.query.all()
     
-    # TA_URL = os.getenv('TA_URL')
-    HOST = os.getenv('HOST')
-    API_KEY = os.getenv('API_KEY')
+#     # TA_URL = os.getenv('TA_URL')
+#     HOST = os.getenv('HOST')
+#     API_KEY = os.getenv('API_KEY')
     
-    TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
+#     TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
 
     
-    querystring = {"most_recent": "true"}
+#     querystring = {"most_recent": "true"}
     
-    headers = {
-        'x-rapidapi-host': 'HOST',
-        'x-rapidapi-key': 'API_KEY' 
-        }
+#     headers = {
+#         'x-rapidapi-host': 'HOST',
+#         'x-rapidapi-key': 'API_KEY' 
+#         }
+#     top_articles = request.args.get["top_articles"]
+#     response = requests.get(TA_URL, headers=headers, params=querystring)
+#     # print(response.json())
+#     top_articles = request.args.get["top_articles"]
+#     return jsonify(top_articles)
+#     # print(response.json())
     
-    response = requests.request("GET", TA_URL, headers=headers, params=querystring)
-    # data = response.json()
-    print(response.json())
+#     return render_template("top_articles.html", top_articles=top_articles)
     
-    return render_template("top_articles.html")
+# @app.route("/latest-articles/<string:past_hours>")
+# def list_latest_articles(past_hours):
+#     """Returns lastest articles from the past 2 hours"""
     
-@app.route("/latest-articles/<string:past_hours>")
-def list_latest_articles(past_hours):
-    """Returns lastest articles from the past 2 hours"""
+#     latest_articles = LatestArticle.query.all()
     
-    latest_articles = LatestArticle.query.all()
+#     HOST = os.getenv('HOST')
+#     API_KEY = os.getenv("API_KEY")
     
-    HOST = os.getenv('HOST')
-    API_KEY = os.getenv("API_KEY")
+#     LA_URL = "https://api-hoaxy.p.rapidapi.com/latest-articles"
     
-    LA_URL = "https://api-hoaxy.p.rapidapi.com/latest-articles"
+#     querystring = {"past_hours": "2"}
     
-    querystring = {"past_hours": "2"}
+#     headers = {
+#         'x-rapid-host': 'HOST',
+#         'x-rapid-key': 'API_KEY'
+#     }
     
-    headers = {
-        'x-rapid-host': 'HOST',
-        'x-rapid-key': 'API_KEY'
-    }
+#     response = requests.request("GET", LA_URL, headers=headers, params=querystring)
+#     print(response.json())
     
-    response = requests.request("GET", LA_URL, headers=headers, params=querystring)
-    print(response.text)
     
-    # to_json = response.json()
-    return render_template("latest_articles.html", latest_articles=latest_articles)
+#     return render_template("latest_articles.html", latest_articles=latest_articles)
 
 ##############################################################################
 # Turn off all caching in Flask
