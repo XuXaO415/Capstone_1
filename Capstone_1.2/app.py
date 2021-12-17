@@ -1,4 +1,5 @@
 import os
+from re import search
 from flask import Flask, render_template, request, flash, redirect, session, g, url_for, jsonify
 from flask.json.tag import JSONTag
 import requests
@@ -126,14 +127,13 @@ def page_not_found(e):
     return render_template("404.html"), 404
 
 ##############################################################################
-@app.route("/search")
-def show_top_articles():
+@app.route("/search", methods=["GET"])
+def search_top_articles():
    
     HOST = os.getenv('HOST')
     API_KEY = os.getenv('API_KEY')
-    TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
     # articles = request.args["articles"]
-    # print(API_KEY)
+    
     
 
     querystring = {
@@ -144,8 +144,8 @@ def show_top_articles():
 
     
     headers = {
-        'x-rapidapi-host': "api-hoaxy.p.rapidapi.com",
-        'x-rapidapi-key': "d8313e232amsh5a802c2be2cf4d8p166013jsn2c6c9bae4858"
+        'x-rapidapi-host': HOST,
+        'x-rapidapi-key': API_KEY
     }
 
     response = requests.get("https://api-hoaxy.p.rapidapi.com/articles", headers=headers,
@@ -153,24 +153,31 @@ def show_top_articles():
     
     latestresponse = requests.get("https://api-hoaxy.p.rapidapi.com/articles", headers=headers,
                             params=latestquery)
+    
     top_articles = response.json()
-    latest_articles= latestresponse.json()
-    print(response.text)
-    # return jsonify(top_articles)
-    # pdb.set_trace()
-    return render_template("top_articles.html", top_articles=top_articles['articles'], latest_articles=latest_articles['articles'])
 
+    latest_articles = latestresponse.json()
+    # print(response.text)
+    # return jsonify(top_articles)
+    
+    return render_template("top_articles.html", top_articles=top_articles['articles'], latest_articles=latest_articles['articles'])
+  
 
 
 @app.route("/search/newsapi", methods=["GET", "POST"])
-def search_top_articles():
+def search_top_headlines():
 
     API_SECRET_KEY = os.getenv('API_SECRET_KEY')
-    response = requests.get(f"https://newsapi.org/v2/top-headlines?q={request.args['q']}&apiKey={API_SECRET_KEY}"
+  
+   
+    #working
+    response = requests.get(f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_SECRET_KEY}"
         )
+
     
     top_headlines = response.json()
     return jsonify(top_headlines)
+    return render_template("top_articles.html", top_articles=top_articles)
 
 
 
@@ -201,57 +208,8 @@ def search_top_articles():
 #     return render_template("top_headlines.html", headlines=top_headlines)
 
     
-# @app.route("/top-articles")
-# def list_top_articles():
-#     """List top articles from last 30 days"""
-    
-#     top_articles = TopArticle.query.all()
-    
-#     # TA_URL = os.getenv('TA_URL')
-#     HOST = os.getenv('HOST')
-#     API_KEY = os.getenv('API_KEY')
-    
-#     TA_URL = "https://api-hoaxy.p.rapidapi.com/top-articles"
 
-    
-#     querystring = {"most_recent": "true"}
-    
-#     headers = {
-#         'x-rapidapi-host': 'HOST',
-#         'x-rapidapi-key': 'API_KEY' 
-#         }
-#     top_articles = request.args.get["top_articles"]
-#     response = requests.get(TA_URL, headers=headers, params=querystring)
-#     # print(response.json())
-#     top_articles = request.args.get["top_articles"]
-#     return jsonify(top_articles)
-#     # print(response.json())
-    
-#     return render_template("top_articles.html", top_articles=top_articles)
-    
-# @app.route("/latest-articles/<string:past_hours>")
-# def list_latest_articles(past_hours):
-#     """Returns lastest articles from the past 2 hours"""
-    
-#     latest_articles = LatestArticle.query.all()
-    
-#     HOST = os.getenv('HOST')
-#     API_KEY = os.getenv("API_KEY")
-    
-#     LA_URL = "https://api-hoaxy.p.rapidapi.com/latest-articles"
-    
-#     querystring = {"past_hours": "2"}
-    
-#     headers = {
-#         'x-rapid-host': 'HOST',
-#         'x-rapid-key': 'API_KEY'
-#     }
-    
-#     response = requests.request("GET", LA_URL, headers=headers, params=querystring)
-#     print(response.json())
-    
-    
-#     return render_template("latest_articles.html", latest_articles=latest_articles)
+
 
 ##############################################################################
 # Turn off all caching in Flask
