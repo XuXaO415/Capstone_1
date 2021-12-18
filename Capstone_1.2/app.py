@@ -127,6 +127,10 @@ def page_not_found(e):
     return render_template("404.html"), 404
 
 ##############################################################################
+
+    
+
+
 @app.route("/search", methods=["GET"])
 def search_top_articles():
    
@@ -134,13 +138,14 @@ def search_top_articles():
     API_KEY = os.getenv('API_KEY')
     # articles = request.args["articles"]
     
+
     
 
     querystring = {
-    "query": request.args['q'], "sort_by": "relevant", "use_lucene_syntax": "true"}
+        "query": request.args['q'], "sort_by": "relevant", "use_lucene_syntax": "true"}
     
     latestquery = {
-        "query": request.args['q'], "sort_by": "recent", "use_lucene_syntax": "true"}
+        "query": request.args['q'],  "sort_by": "recent", "use_lucene_syntax": "true"}
 
     
     headers = {
@@ -162,22 +167,41 @@ def search_top_articles():
     
     return render_template("top_articles.html", top_articles=top_articles['articles'], latest_articles=latest_articles['articles'])
   
-
-
-@app.route("/search/newsapi", methods=["GET", "POST"])
-def search_top_headlines():
-
-    API_SECRET_KEY = os.getenv('API_SECRET_KEY')
-  
-   
-    #working
-    response = requests.get(f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_SECRET_KEY}"
-        )
+@app.route("/latest_articles", methods=["GET"])
+def search_latest_articles():
+    HOST = os.getenv('HOST')
+    API_KEY = os.getenv('API_KEY')
+    
+        
+    latestquery = {"most_recent": "2"}
 
     
-    top_headlines = response.json()
-    return jsonify(top_headlines)
-    return render_template("top_articles.html", top_articles=top_articles)
+    headers = {
+        'x-rapidapi-host': HOST,
+        'x-rapidapi-key': API_KEY
+    }
+    
+    response = requests.get("https://api-hoaxy.p.rapidapi.com/latest_articles", headers=headers,
+                            params=latestquery)
+    
+    latest_articles = response.json()
+    
+    return render_template("latest_articles.html", latest_articles=latest_articles)
+
+# @app.route("/search/newsapi", methods=["GET"])
+# def search_top_headlines():
+
+#     API_SECRET_KEY = os.getenv('API_SECRET_KEY')
+  
+   
+#     #working
+#     response = requests.get(f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_SECRET_KEY}"
+#         )
+
+    
+#     top_headlines = response.json()
+#     return jsonify(top_headlines)
+#     return render_template("top_articles.html", top_articles=top_articles)
 
 
 
