@@ -1,0 +1,53 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Trending Articles</title>
+</head> -->
+{% extends 'base.html' %} {% block content%}
+
+<div class="container">
+    <div class="p-4 p-md-4 mb-4 text-white rounded bg-dark" method="POST">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic">Top Articles</h1>
+            <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+            <p class="lead mb-0"><a href="/" class="text-white fw-bold">Continue reading...</a></p>
+        </div>
+    </div>
+
+    <article class="article-post" method="POST">
+        {% for top_article in top_articles %}
+
+        <a href="/{{ top_articles.id }}">
+            <h2 class="fst-italic">{{ top_article['title']}}</h2>
+
+
+            <p class="article-post-meta">{{ top_article['date_published']}}</p>
+            <p class="article-url">{{ top_article['domain']}}</p>
+
+            <p class="article-source">{{ top_article[ 'claim']}}</p>
+        </a>
+        {% endfor %}
+        <!-- <h1>
+            Latest News
+            </h1>
+            {% for latest_article in latest_articles %}
+            <li>
+                <a href=" /{{ latest_articles.id }} ">
+                    <ul>
+                        <ol>
+                            <p>{{ latest_article['title']}}
+                            </p>
+                            <p>{{ latest_article['score']}}
+                            </p>
+                            <p>{{ latest_article['domain']}}
+                            </p>
+
+                        </ol>
+                    </ul>
+                </a>
+            </li>
+            {% endfor %} -->{% endblock%}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latest Breaking News</title>
+</head>
+
+<body>
+    <form class="form-inline profile justify-content-center" method="POST">
+        <h1>
+            Latest Articles
+        </h1>
+        {% for latest_article in latest_articles %}
+        <li>
+            <a href=" /{{ latest_articles.id }} ">
+                <ul>
+                    <ol>
+                        <p>{{ latest_article['title']}}
+                        </p>
+                        <p>{{ latest_article['score']}}
+                        </p>
+                        <p>{{ latest_article['domain']}}
+                        </p>
+
+                    </ol>
+                </ul>
+            </a>
+        </li>
+        {% endfor %}
+    </form>
+</body>
+
+</html>
