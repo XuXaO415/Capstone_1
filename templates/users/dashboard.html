@@ -1,0 +1,6 @@
+{% extends 'base.html' %} {% block pageContent %}
+<h1 class="greeting">Welcome back @{{username}}! </h1>
+<form action="{{ url_for('dashboard') }}" method="POST">
+
+
+    {% endblock %}

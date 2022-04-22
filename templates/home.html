@@ -1,0 +1,7 @@
+{% extends 'base.html' %} {% block content %}
+<form method="POST" action="/users/favorite/{{ favorite_articles_id }}">
+    <button class="btn btn-sm btn-secondary">
+                        <i class="fa fa-thumbs-up"></i>
+                          <i class="fa fa-thumbs-down"></i>
+    </button>
+</form> {% endblock %}

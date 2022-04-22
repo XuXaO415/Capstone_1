@@ -1,0 +1,23 @@
+{% extends 'base.html' %} {% block title %}Aletheia Search {% endblock %} {%block content%}
+
+<article class="story story-top_articles">
+    <h1 class="text-center">Top Trending Articles</h1>
+    <hr /> {% for top_article in top_articles %}
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{top_article.title}}</strong>
+                </center>
+            </h3>
+            <img src="{{top_article.urlToImage}}" class="float-right" style="width: 60%" />
+            <div class="ln-caption">Author: {{ top_article.author }}</div>
+            <p>{{ top_article.date_published }}</p>
+            <p>{{top_article.description}}</p>
+            <a href=" {{ top_article.url }} ">Read more... </a>
+        </div>
+    </div>
+    {% endfor %}
+</article>
+{% endblock%}

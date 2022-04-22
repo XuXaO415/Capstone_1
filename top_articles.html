@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block title %}Top Articles{% endblock %} {% block content %}
+
+<form class="form-inline profile justify-content-center" method="POST">
+    <h1>
+        Latest News
+    </h1>
+    <ul>
+        {% for latest_article in latest_articles %}
+        <li>
+            <a href="/{{ top.id }}">{{ top.title}}</a></li>
+        {% endfor %} </ul>
+</form>
+
+{% endblock %}

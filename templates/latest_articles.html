@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block title %}Latest Articles{% endblock %} {% block content %}
+
+<article class="story story-latest_news">
+
+    <h1 class="text-center">Latest News</h1>
+    <hr/> {% for latest_article in latest_articles %}
+
+    <div class="latest-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{latest_article.title}}</strong>
+                </center>
+            </h3>
+            <img src="{{ latest_article.urlToImage }}" class="float-right" style="width:60%" />
+            <div class="ln-caption">Author: {{ latest_article.author}} {{latest_article.date_published}}</div>
+
+            <p>{{ latest_article.date_published }}</p>
+            <p> {{latest_article.description}}</p>
+            <a href=" {{ latest_article.url }} ">Read more... </a>
+            <div class="row">
+                <form method="POST" action="/users/favorite/{{ favorite_articles_id }}">
+                    <button class="btn btn-sm btn-primary">
+            <i class="fa fa-thumbs-up"></i>
+               </button>
+                </form>
+
+
+                <form method="POST" action="/users/delete/{{ favorite_article_id }}">
+                    <button class="btn btn-sm btn-secondary">
+            <i class="fa fa-thumbs-down"></i>
+          </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</article>
+
+{% endblock%}

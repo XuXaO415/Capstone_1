@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}U.S News{% endblock %} {%block content%}
+
+<article class="story story-tech_news">
+
+    <h1 class="text-center">U.S News</h1>
+    <hr/> {% for us_news in us_news %}
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{us_news.title}}</strong>
+                </center>
+            </h3>
+            <img src="{{us_news.urlToImage}}" class="float-right" style="width: 50%" />
+            <div class="ln-caption">Author: {{ us_news.author }} {{us_news.date_published}}</div>
+            <p> {{us_news.title}}</p>
+            <p>{{us_news.description}}</p>
+
+            <a href=" {{ us_news.url }} ">Read more... </a>
+
+        </div>
+    </div>
+    {%endfor%}
+</article>
+{%endblock%}

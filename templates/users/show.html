@@ -1,0 +1,21 @@
+{% extends 'users/detail.html' %} {% block user_details %}
+<!-- <div class="col-sm-6">
+
+
+    {% for favorite_article in favorite_articles %}
+
+    <li class="list-group-item">
+        <a href="/favorite_article/{{ favorite_article.id }}" />
+
+        <a href="/users/{{ user.id }}"></a>
+
+        <div class="favorites-area">
+            <a href="/users/{{ user.id }}">@{{ user.username }}</a>
+            <span class="text-muted">{{ favorite_article.timestamp.strftime('%d %B %Y') }}</span>
+        </div>
+    </li>
+
+    {% endfor %}
+
+</div> 
+{% endblock %}

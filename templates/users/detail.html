@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+
+
+<!-- <h1 class="greeting">Favorites</h1>
+{% if empty %}
+<p>You do not have any saved favorites</p>
+{% endif %}
+
+    {% for favorite_article in favorite_articles %}
+    <div class="saved_fav">
+<h2{{ favorite_article.title }}></h2>
+{% endfor %}
+
+
+
+</h4> -->
+<h1 class="greeting">Welcome back {{user.username}}! </h1>
+<div class="ml-auto">
+    {% if g.user.id == user.id %}
+    <a href="/users/{{user.id}}/edit" class="btn btn-outline-secondary">Edit Profile</a> {% endif %}
+</div>
+{%endblock%}

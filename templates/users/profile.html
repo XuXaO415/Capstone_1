@@ -1,0 +1,29 @@
+{% extends 'users/edit.html' %} {% block title %}{% endblock %} {% block content %}
+
+<h1 class="text-center mt-3 top-text mb-3">{{ g.user.username }}'s profile</h1>
+<div class="profile">
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-6">
+            <div>
+                <h2 class="user-details-title text-warning mt-3">
+                    <u>User Details</u>
+                </h2>
+                <div class="user-details">
+                    <p class="mb-0 user-name">
+                        <span>Username:</span> {{ g.user.username }}
+                    </p>
+                    <p class="mb-0 user-email"><span>Email:</span> {{ g.user.email }}</p>
+                </div>
+            </div>
+
+            <form class="col-md-6" action="/users/{{user_id}}/edit">
+                <button class="btn btn-primary">Edit</button>
+                <a href="/users/{{user_id}}/edit">
+            </form>
+            <form class="col-md-6" action="/users/delete" method="POST">
+                <button class="btn btn-danger profile-btn">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

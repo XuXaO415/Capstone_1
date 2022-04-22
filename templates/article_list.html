@@ -1,0 +1,42 @@
+{% extends 'base.html' %} {% block title %}{{title}}{% endblock %} {% block content %}
+
+<article class="story story-tech_news">
+
+    <h1 class="text-center">{{title}}</h1>
+    <hr/> {% for article in articles %}
+
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{article.title}}</strong>
+                </center>
+            </h3>
+
+            <img src="{{article.urlToImage}}" class="float-right" style="width: 60%" />
+
+            <div class="ln-caption">{{ article.author }}/{{article.source.name}}</div>
+            <p>{{article.date_published}}</p>
+            <p>{{article.description}}</p>
+            <a href=" {{ article.url }} ">Read more... </a>
+            <div class="row">
+                <form method="POST" action="/users/favorite/{{ favorite_articles_id }}">
+                    <button class="btn btn-sm btn-primary">
+            <i class="fa fa-thumbs-up"></i>
+               </button>
+                </form>
+
+
+                <form method="POST" action="/users/delete/{{ favorite_article_id }}">
+                    <button class="btn btn-sm btn-secondary">
+            <i class="fa fa-thumbs-down"></i>
+          </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</article>
+{% endblock %}

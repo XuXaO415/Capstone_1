@@ -1,0 +1,24 @@
+{% extends 'article_list.html' %} {% block title %}{{title}}{% endblock %} {%block content%}
+
+<article class="story story-science" method="POST">
+
+    <h1 class="text-center">Science</h1>
+    <hr />{% for science in science %}
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <strong>{{science.title}}</strong>
+            </h3>
+
+            <img src="{{ science.urlToImage }}" class="float-right" alt="Responsive image" style="width: 50%">
+            <div class="ln-caption">Author: {{ science.author }}</div>
+            <!-- <p class="science-source">Site type: {{ science.site_type}}</p> -->
+            <p>{{ science.date_published }}</p>
+            <p>{{ science.description }}</p>
+            <a href=" {{ science.url }} ">Read more... </a>
+        </div>
+    </div>
+    {% endfor %}
+</article>
+{% endblock%}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block title %}{{title}}{% endblock %} {%block content%}
+
+<article class="story story-business_news">
+
+    <h1 class="text-center">World News</h1>
+    <hr/> {%for world_news in world_news %}
+
+    <div class="world-container">
+        <div class="row">
+            <h2>
+
+                <strong>{{world_news.title}}</strong>
+
+            </h2>
+
+            <img src="{{world_news.urlToImage}}" class="float-right" style="width:60%" />
+
+            <div class="ln_caption">
+                <i>{{ world_news.author}}/{{world_news.source.name}}</i></div>
+            <!-- <div class="author_caption">Author: {{ world_news.author}} </div> -->
+
+
+            <p>{{ world_news.date_published }}</p>
+            <p> {{world_news.description}}</p>
+            <a href=" {{ world_news.url }} ">Read more... </a>
+
+        </div>
+    </div>
+    {%endfor%}
+</article>
+{%endblock%}

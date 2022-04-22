@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Trending Articles</title>
+</head>
+
+<body>
+    <header>
+        <form class="form-inline profile justify-content-center" method="POST">
+
+            <h1>
+                Top News
+            </h1>
+        </form>
+
+
+        {% for top_article in top_articles %}
+
+        <a href="/{{ top_articles.id }}/">
+            <ul class="pagination">
+                <li list="page-item">{{ top_article['title']}}</li>
+
+                <li>{{ top_article['date_published']}}
+                </li>
+                <li>{{ top_article['domain']}}
+                </li>
+                <li>{{ top_article[ 'claim']}} </li>
+
+
+            </ul>
+        </a>
+
+
+        {% endfor %}
+        <h1>
+            Latest News
+        </h1>
+        {% for latest_article in latest_articles %}
+        <li>
+            <a href="/{{ latest_articles.id }}">
+                <ul>
+                    <ol>
+                        <p>{{ latest_article['title']}}
+                        </p>
+                        <p>{{ latest_article['score']}}
+                        </p>
+                        <p>{{ latest_article['domain']}}
+                        </p>
+
+                    </ol>
+                </ul>
+            </a>
+        </li>
+        {% endfor %}
+
+    </header>
+</body>
+
+</html>
+
+
+From base.html
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top py-4" id="custom-nav">
+    <div class="container-fluid mx-5">
+        <a class="navbar-brand" href="/"><i class="fas fa-balance-scale"></i> Aletheia</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+
+
+        <form class="d-flex">
+            {% if not g.user %}
+            <li><a href="/login" class="text-white">Login</a></li>
+            <li><a href="/signup" class="text-white">Signup</a></li>
+            {% else %}
+
+            <!-- <li><a href="/users/favorites" class="text-white"><i class="fas fa-user-alt fa-lg"></i></a></li> -->
+            <li><a href="/logout" class="text-white">Logout</a></li>
+            {% endif %}
+        </form>
+
+    </div>
+</nav>
+
+From index.html {% extends 'base.html'%} {% block title %}Homepage{% endblock %} {% block content %}
+
+<section class="py-5 text-center container mt-5">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light"><i class="fas fa-balance-scale"></i> Search Aletheia</h1>
+            <form class="d-flex" action="/search">
+                <input class="form-control me-2" type="text" name="q" id="search" required style=" text-transform: capitalize " placeholder="Search Anything " aria-label="Search " />
+                <button class="btn btn-outline-success " type="submit ">Search</button>
+                <span class="validity "></span>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+<!-- <div class="col-md-6 ">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative ">
+            <div class="col p-4 d-flex flex-column position-static" id="latest_articles">
+                <strong class="d-inline-block mb-2 text-success ">Latest News</strong>
+                <h3>{{latest_article.title}}</h3>
+                <a href="/latest_articles?latest_articles_id={{latest_article.id}}">
+
+                    <p class=" card-text mb-auto">{{ latest_article.description}}</p>
+
+
+                    <a href="/latest_articles/{{ latest_articles_id}}" class=" stretched-link ">Continue reading</a>
+            </div>
+        </div>
+    </div> -->
+
+
+
+{% extends 'base.html' %} {% block title %}Health News {% endblock %} {%block content%}
+
+<article class="story story-health">
+
+    <h1 class="text-center">Health News</h1>
+    <hr/> {%for health in health %}
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{health.title}}</strong>
+                </center>
+            </h3>
+            <img src="{{health.urlToImage}}" class="float-right" style="width: 60%" />
+            <div class="ln-caption">Author: {{ health.author }}</div>
+            <p>{{ health.date_published }}</p>
+            <p>{{health.description}}</p>
+            <a href=" {{ health.url }} ">Read more... </a>
+        </div>
+    </div>
+    {%endfor%}
+    <article>
+        {%endblock%}
+
+
+
+        <main>
+            <section class="py-5 text-center container mt-5">
+                <div class="row py-lg-5">
+                    <div class="col-lg-6 col-md-8 mx-auto">
+                        {% for favorite_article in favorite_articles %}
+                        <h1 class="fw-light">Your Favorites</h1>
+
+                        <form method="POST" action="/users/favorite/{{ favorite_articles_id }}">
+                            <button class="btn btn-sm btn-primary">
+            <i class="fa fa-thumbs-up"></i>
+               </button>
+                        </form>
+                        <form method="POST" action="/users/delete/{{ favorite_article_id }}">
+                            <button class="btn btn-sm btn-secondary">
+            <i class="fa fa-thumbs-down"></i>
+          </button>
+                        </form>
+                        {% endfor%}
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+        <!-- from favorites.html -->
+        {% extends 'base.html' %} {% block title %}Favorites{% endblock %} {%block content%}
+
+
+        <h1 class="fw-light">Your Favorites</h1>
+        {% if empty %}
+        <div class="empty">
+            <p>You have no saved articles</p>
+        </div>
+        {% else %} {% for favorite_article in favorite_articles %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ favorite_article.title }}</h2>
+
+
+
+            </div>
+        </div>
+
+
+        {% endfor %} {% endif %} {% endblock %} 
+        
+        
+        
+        favorite.html {% if empty %}
+        <div class="empty">
+            <p>You have no saved articles</p>
+        </div>
+        {% else %} {% for favorite_article in favorite_articles %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ favorite_article.title }}</h2>
+                <li>{{favorite_artice.id}}</li>
+                <p class="card=text text-muted h6">{{favorite_article.author}} | {{ favorite_article.timestamp }} </p>
+            </div>
+            {% endfor %} {% endif %}

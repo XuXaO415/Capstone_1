@@ -1,0 +1,64 @@
+{% extends 'base.html'%} {% block title %}Homepage{% endblock %} {% block content %}
+
+<section class="py-2 text-center container mt-2">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light"><i class="fas fa-balance-scale"></i> Search Aletheia</h1>
+            <form class="d-flex" action="/search">
+                <input class="form-control me-2" type="text" name="q" id="search" required style="text-transform: capitalize;" placeholder=" Search Anything " aria-label="Search " />
+                <button class="btn btn-default">
+                <span class="fa fa-search" type="submit"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+<div class="row mb-2 ">
+    <div class="col-md-6 ">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative ">
+            <div class="col p-4 d-flex flex-column position-static ">
+                <strong class="d-inline-block mb-2 text-primary ">World News</strong> {% for world_new in world_news %}
+                <h3 class="mb-0">{{world_new.title}}</h3>
+                <img src="{{world_new.urlToImage}} " />
+                <div class="mb-1 text-muted ">By {{world_new.author}} - {{world_new.source.name}} </div>
+                <p class="card-text mb-auto ">{{ world_new.description }}</p>
+                <a href="{{ world_new.url }}" target="_blank">Continue reading...</a>
+                <form method="POST" action="/users/favorite">
+                    <button class="btn btn-sm btn-primary"><i class="fa fa-thumbs-up"></i></button>
+
+                    <button class="btn btn-sm btn-secondary">
+                <i class="fa fa-thumbs-down"></i>
+                </button>
+                </form>
+                <hr> {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 ">
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative ">
+            <div class="col p-4 d-flex flex-column position-static ">
+                <strong class="d-inline-block mb-2 text-success ">Trending News</strong> {% for latest_article in latest_articles %}
+                <h3 class="mb-0 ">{{latest_article.title}}</h3>
+                <img src="{{latest_article.urlToImage}} " />
+
+                <div class="mb-1 text-muted ">{{latest_article.author}}/{{latest_article.source.name}}</div>
+                <p class="mb-auto my-auto ">{{latest_article.description}}</p>
+
+                <a href="{{latest_article.url}}" target="_blank">Continue reading...</a>
+                <form method="POST " action="/users/favorite/ ">
+                    <button class="btn btn-sm btn-primary ">
+            <i class="fa fa-thumbs-up "></i></button>
+                    <button class="btn btn-sm btn-secondary"><i class=" fa fa-thumbs-down "></i></button>
+                </form>
+                <hr>{% endfor%}
+            </div>
+            <!--lists fake news sites https://infogram.com/politifacts-fake-news-almanac-1gew2vjdxl912nj -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}

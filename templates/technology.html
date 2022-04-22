@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block title %}{{title}}{% endblock %} {% block content %}
+
+<article class="story story-tech_news">
+
+    <h1 class="text-center">Technology</h1>
+    <hr/> {% for technology in technology %}
+
+
+    <div class="top-container">
+        <div class="row">
+            <h3>
+                <center>
+                    <strong>{{technology.title}}</strong>
+                </center>
+            </h3>
+
+            <img src="{{technology.urlToImage}}" class="float-right" style="width: 60%" />
+
+            <div class="ln-caption">Author: {{ technology.author }}</div>
+            <p>{{technology.date_published}}</p>
+            <p>{{technology.description}}</p>
+            <a href=" {{ technology.url }} ">Read more... </a>
+
+        </div>
+    </div>
+
+    {% endfor %}
+</article>
+{% endblock %}
