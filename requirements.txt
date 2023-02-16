@@ -46,7 +46,7 @@ tabulate==0.8.9
 toml==0.10.2
 Turbo-Flask==0.8.0
 urllib3==1.26.8
-Werkzeug==2.0.3
+Werkzeug==2.2.3
 wimpy==0.6
 wsproto==1.0.0
 WTForms==3.0.1
